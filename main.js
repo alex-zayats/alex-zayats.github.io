@@ -2,10 +2,11 @@
 
 const articleWrapper = document.getElementById("news"),
 	sourcesSelect = document.getElementById("sources"),
-	apiKey = 'e3d6b3ad8b4e480c84ab39972bb544a5';
+	apiKey = 'e3d6b3ad8b4e480c84ab39972bb544a5',
+	apiVersion = 'v2';
 
 function loadChannels() {
-	fetch(`https://newsapi.org/v1/sources?apiKey=${apiKey}`)
+	fetch(`https://newsapi.org/${apiVersion}/sources?apiKey=${apiKey}`)
 	  .then((response) =>  response.json())
 	  .then((response) => {
 	  	if (response.status == 'ok') {
@@ -54,7 +55,7 @@ function createArticleMarkup(article) {
 }
 
 function loadNews(channel) {
-	fetch(`https://newsapi.org/v1/articles?source=${channel}&apiKey=${apiKey}`)
+	fetch(`https://newsapi.org/${apiVersion}/everything?sources=${channel}&apiKey=${apiKey}`)
 	  .then((response) =>  response.json())
 	  .then((response) => {
 	  	if (response.status == 'ok') {
