@@ -24,7 +24,8 @@ function loadChannels() {
 	  	}
 	  })
 	  .then(() => {
-	  	addSourceListener()
+	  	addSourceListener();
+	  	addLoadMoreListener();
 	  })
 	  .catch(alert);
 }
@@ -39,6 +40,25 @@ function addSourceListener() {
 		loadNews(selectedSource, selectedPage);
 	});
 }
+
+function addLoadMoreListener() {
+	getMoreButton.addEventListener('click', (event) => {
+		if (!isLoadingMore) {
+			loadNews(selectedSource, ++selectedPage);
+		}
+	});
+}
+
+
+// it's working also fine
+function addScrollListener() {
+	window.addEventListener('scroll', ((event) => {
+		if (window.pageYOffset + window.innerHeight >= document.body.getBoundingClientRect().height && !isLoadingMore) {
+			loadNews(selectedSource, ++selectedPage);
+		}
+	}));
+}
+
 
 function createArticleMarkup(article) {
 	let {
@@ -79,24 +99,5 @@ function loadNews(source, page) {
 	  })
 	  .catch(alert);
 }
-
-function addLoadMoreListener() {
-	getMoreButton.addEventListener('click', (event) => {
-		if (!isLoadingMore) {
-			loadNews(selectedSource, ++selectedPage);
-		}
-	});
-}
-addLoadMoreListener();
-
-function addScrollListener() {
-	window.addEventListener('scroll', ((event) => {
-		if (window.pageYOffset + window.innerHeight >= document.body.getBoundingClientRect().height && !isLoadingMore) {
-			loadNews(selectedSource, ++selectedPage);
-		}
-	}));
-}
-// it's working also fine
-// addScrollListener();
 
 loadChannels();
