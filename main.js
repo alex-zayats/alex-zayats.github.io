@@ -1,9 +1,14 @@
 'use strict';
 
-const articleWrapper = document.getElementById("news"),
+const articlesWrapper = document.getElementById("news"),
 	sourcesSelect = document.getElementById("sources"),
+	getMoreButton = document.getElementById("get-more"),
 	apiKey = 'e3d6b3ad8b4e480c84ab39972bb544a5',
 	apiVersion = 'v2';
+
+let selectedSource = null,
+	selectedPage = 1,
+	isLoadingMore = false;
 
 function loadChannels() {
 	fetch(`https://newsapi.org/${apiVersion}/sources?apiKey=${apiKey}`)
@@ -25,10 +30,13 @@ function loadChannels() {
 }
 
 function addSourceListener() {
-	loadNews(sourcesSelect.value);
+	selectedSource = sourcesSelect.value
+	loadNews(selectedSource, selectedPage);
 	sourcesSelect.addEventListener('change', (event) => {
-		let selectedSource = event.currentTarget.value;
-		loadNews(selectedSource);
+		selectedPage = 1;
+		selectedSource = event.currentTarget.value;
+		articlesWrapper.innerHTML = '';
+		loadNews(selectedSource, selectedPage);
 	});
 }
 
@@ -54,19 +62,41 @@ function createArticleMarkup(article) {
 			</article>`
 }
 
-function loadNews(channel) {
-	fetch(`https://newsapi.org/${apiVersion}/everything?sources=${channel}&apiKey=${apiKey}`)
+function loadNews(source, page) {
+	isLoadingMore = true;
+	fetch(`https://newsapi.org/${apiVersion}/everything?sources=${source}&page=${page}&apiKey=${apiKey}`)
 	  .then((response) =>  response.json())
 	  .then((response) => {
 	  	if (response.status == 'ok') {
-	  		articleWrapper.innerHTML = '';
 			response.articles.forEach((article) => {
 				let articleContent = createArticleMarkup(article);
-				articleWrapper.innerHTML += articleContent;
+				articlesWrapper.innerHTML += articleContent;
 			});
 	  	}
 	  })
+	  .then(() => {
+  		isLoadingMore = false;
+	  })
 	  .catch(alert);
 }
+
+function addLoadMoreListener() {
+	getMoreButton.addEventListener('click', (event) => {
+		if (!isLoadingMore) {
+			loadNews(selectedSource, ++selectedPage);
+		}
+	});
+}
+addLoadMoreListener();
+
+function addScrollListener() {
+	window.addEventListener('scroll', ((event) => {
+		if (window.pageYOffset + window.innerHeight >= document.body.getBoundingClientRect().height && !isLoadingMore) {
+			loadNews(selectedSource, ++selectedPage);
+		}
+	}));
+}
+// it's working also fine
+// addScrollListener();
 
 loadChannels();

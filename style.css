@@ -4,12 +4,19 @@
 }
 
 #sources {
-	font-size: 18px;	
+	font-size: 18px;
 }
 
 #news {
 	width: 80%;
 	margin: 0 auto;
+}
+
+#get-more {
+	margin: 20px auto;
+	display: block;
+	font-size: 20px;
+	cursor: pointer;
 }
 
 .article {
