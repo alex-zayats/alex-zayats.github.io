@@ -15,12 +15,12 @@ function loadChannels() {
 	  .then((response) =>  response.json())
 	  .then((response) => {
 	  	if (response.status == 'ok') {
-			response.sources.forEach((source => {
+			response.sources.forEach((source = {}) => {
 				let sourceOption = document.createElement("option");
 				({id: sourceOption.value} = source);
 				sourceOption.text += `${source.name} (${source.language})`;
 				sourcesSelect.add(sourceOption);
-			}));
+			});
 	  	}
 	  })
 	  .then(() => {
@@ -60,13 +60,13 @@ function addScrollListener() {
 }
 
 
-function createArticleMarkup(article) {
+function createArticleMarkup(article = {}) {
 	let {
-		author: author,
-		title: title,
+		author: author = '',
+		title: title = '',
 		publishedAt: date = '',
 		urlToImage: imgSrc = '',
-		description: content,
+		description: content = '',
 		url: contentLink = '/#'
 	} = article;
 
