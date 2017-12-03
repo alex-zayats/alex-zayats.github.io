@@ -12,22 +12,24 @@ let selectedSource = null,
 
 function loadChannels() {
 	fetch(`https://newsapi.org/${apiVersion}/sources?apiKey=${apiKey}`)
-	  .then((response) =>  response.json())
-	  .then((response) => {
-	  	if (response.status == 'ok') {
+	.then((response) => response.json())
+	.then((response) => {
+		if (response.status == 'ok') {
 			response.sources.forEach((source = {}) => {
 				let sourceOption = document.createElement("option");
-				({id: sourceOption.value} = source);
-				sourceOption.text += `${source.name} (${source.language})`;
+				sourceOption.id = sourceOption.value;
+				sourceOption.text = `${source.name} (${source.language})`;
 				sourcesSelect.add(sourceOption);
 			});
-	  	}
-	  })
-	  .then(() => {
-	  	addSourceListener();
-	  	addLoadMoreListener();
-	  })
-	  .catch(alert);
+		}
+	})
+	.then(() => {
+		addSourceListener();
+		addLoadMoreListener();
+	})
+	.catch(function(error) {
+		console.error('There has been a problem with your fetch operation: ' + error.message);
+	});
 }
 
 function addSourceListener() {
@@ -85,19 +87,21 @@ function createArticleMarkup(article = {}) {
 function loadNews(source, page) {
 	isLoadingMore = true;
 	fetch(`https://newsapi.org/${apiVersion}/everything?sources=${source}&page=${page}&apiKey=${apiKey}`)
-	  .then((response) =>  response.json())
-	  .then((response) => {
-	  	if (response.status == 'ok') {
+	.then((response) =>  response.json())
+	.then((response) => {
+		if (response.status == 'ok') {
 			response.articles.forEach((article) => {
 				let articleContent = createArticleMarkup(article);
 				articlesWrapper.innerHTML += articleContent;
 			});
-	  	}
-	  })
-	  .then(() => {
-  		isLoadingMore = false;
-	  })
-	  .catch(alert);
+		}
+	})
+	.then(() => {
+		isLoadingMore = false;
+	})
+	.catch(function(error) {
+		console.error('There has been a problem with your fetch operation: ' + error.message);
+	});
 }
 
 loadChannels();
