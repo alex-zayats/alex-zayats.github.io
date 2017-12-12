@@ -1,0 +1,27 @@
+{
+  "name": "news-app",
+  "version": "1.0.0",
+  "main": "index.html",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel main.js -o main-compilled.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex-zayats/alex-zayats.github.io.git"
+  },
+  "author": "Aliaksandr Zayats",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alex-zayats/alex-zayats.github.io/issues"
+  },
+  "homepage": "https://github.com/alex-zayats/alex-zayats.github.io#readme",
+  "description": ""
+}
