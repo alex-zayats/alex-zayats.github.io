@@ -1,6 +1,7 @@
 var HtmlPlugin = require("html-webpack-plugin");
 var TextPlugin = require("extract-text-webpack-plugin");
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
 	context: __dirname,
@@ -28,6 +29,10 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new OptimizeCssAssetsPlugin({
+			assetNameRegExp: /\.css$/,
+			cssProcessorOptions: { discardComments: { removeAll: true } }
+		}),
 		new TextPlugin("./styles/style.css"),
 		new HtmlPlugin({
 			title: "Front-camp task",
