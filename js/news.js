@@ -1,11 +1,9 @@
 'use strict';
 
-import * as constants from './constants.js';
+import constants from './constants.js';
 
 export default function loadNews(source, page) {
-	constants.getMoreButton.disabled = true;
-	fetch(`https://newsapi.org/${constants.apiVersion}/everything?sources=${source}&page=${page}&apiKey=${constants.apiKey}`)
-		.then((response) =>  response.json())
+	constants.loadRequest.loadData(`https://newsapi.org/${constants.apiVersion}/everything?sources=${source}&page=${page}&apiKey=${constants.apiKey}`)
 		.then((response) => {
 			if (response.status == 'ok') {
 				response.articles.forEach((article) => {
@@ -13,9 +11,6 @@ export default function loadNews(source, page) {
 					constants.articlesWrapper.innerHTML += articleContent;
 				});
 			}
-		})
-		.then(() => {
-			constants.getMoreButton.disabled = false;
 		})
 		.catch(function(error) {
 			console.error('There has been a problem with your fetch operation: ' + error.message);

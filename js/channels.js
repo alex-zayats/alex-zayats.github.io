@@ -1,17 +1,18 @@
 'use strict';
 
-import * as constants from './constants.js';
+import constants from './constants.js';
+import ElementBuilder from './ElementBuilder.js';
 import * as listeners from './listeners.js';
 
 export default function loadChannels() {
-	fetch(`https://newsapi.org/${constants.apiVersion}/sources?apiKey=${constants.apiKey}`)
-		.then((response) => response.json())
+	constants.loadRequest.loadData(`https://newsapi.org/${constants.apiVersion}/sources?apiKey=${constants.apiKey}`)
 		.then((response) => {
 			if (response.status == 'ok') {
 				response.sources.forEach((source = {}) => {
-					let sourceOption = document.createElement("option");
-					sourceOption.value = source.id;
-					sourceOption.text = `${source.name} (${source.language})`;
+					let sourceOption = new ElementBuilder('option')
+						.setValue(source.id)
+						.setContent(`${source.name} (${source.language})`)
+						.getResult();
 					constants.sourcesSelect.add(sourceOption);
 				});
 			}

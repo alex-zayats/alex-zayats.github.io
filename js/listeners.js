@@ -1,6 +1,6 @@
 'use strict';
 
-import * as constants from './constants.js';
+import constants from './constants.js';
 import loadNews from './news.js';
 
 export {addChannelListener, addLoadMoreListener};
