@@ -2,7 +2,7 @@
 
 import constants from './constants.js';
 import ElementBuilder from './ElementBuilder.js';
-import * as listeners from './listeners.js';
+import initObservers from './listeners.js';
 import * as app from './app.js'
 
 export default function loadChannels() {
@@ -23,8 +23,7 @@ export default function loadChannels() {
 			}
 		})
 		.then(() => {
-			listeners.addChannelListener();
-			listeners.addLoadMoreListener();
+			initObservers();
 		})
 		.catch(function(error) {
 			console.error('There has been a problem with your fetch operation: ' + error.message);

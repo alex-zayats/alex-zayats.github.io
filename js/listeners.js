@@ -2,24 +2,35 @@
 
 import constants from './constants.js';
 import loadNews from './news.js';
+import Observer from './Observer.js';
 import * as app from './app.js'
 
-export {addChannelListener, addLoadMoreListener};
+export default function initObservers() {
+	let newsObserver = new Observer();
 
-function addChannelListener() {
-	app.selectedSource = constants.sourcesSelect.value;
-	loadNews(app.selectedSource, app.selectedPage);
-	constants.sourcesSelect.addEventListener('change', (event) => {
-		app.selectedPage = 1;
-		app.selectedSource = event.currentTarget.value;
-		constants.articlesWrapper.innerHTML = '';
-		loadNews(app.selectedSource, app.selectedPage);
+	newsObserver.subscribe((selectedSource) => {
+		if (app.selectedSource != selectedSource) {
+			app.selectedPage = 1;
+			app.selectedSource = selectedSource;
+			constants.articlesWrapper.innerHTML = '';
+			loadNews(app.selectedSource, app.selectedPage);
+		} else {
+			loadNews(app.selectedSource, ++app.selectedPage);
+		}
 	});
+
+	constants.sourcesSelect.addEventListener('change', (event) => {
+		runObserve(newsObserver);
+	});
+
+	constants.getMoreButton.addEventListener('click', (event) => {
+		runObserve(newsObserver);
+	});
+
+	runObserve(newsObserver); //inital load
 }
 
-function addLoadMoreListener() {
-	app.selectedSource = constants.sourcesSelect.value;
-	constants.getMoreButton.addEventListener('click', (event) => {
-		loadNews(app.selectedSource, ++app.selectedPage);
-	});
+function runObserve(newsObserver) {
+	let selectedSource = constants.sourcesSelect.value;
+	newsObserver.notify(selectedSource);
 }
