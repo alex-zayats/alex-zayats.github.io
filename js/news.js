@@ -1,25 +1,30 @@
 'use strict';
 
-import * as constants from './constants.js';
+import constants from './constants.js';
+import * as app from './app.js'
 
 export default function loadNews(source, page) {
-	constants.getMoreButton.disabled = true;
-	fetch(`https://newsapi.org/${constants.apiVersion}/everything?sources=${source}&page=${page}&apiKey=${constants.apiKey}`)
-		.then((response) =>  response.json())
-		.then((response) => {
-			if (response.status == 'ok') {
-				response.articles.forEach((article) => {
-					let articleContent = createArticleMarkup(article);
-					constants.articlesWrapper.innerHTML += articleContent;
-				});
-			}
-		})
-		.then(() => {
-			constants.getMoreButton.disabled = false;
-		})
-		.catch(function(error) {
-			console.error('There has been a problem with your fetch operation: ' + error.message);
-		});
+	if (!app.news[source][page]) {
+		constants.loadRequest.loadData(`https://newsapi.org/${constants.apiVersion}/everything?sources=${source}&page=${page}&apiKey=${constants.apiKey}`)
+			.then((response) => {
+				if (response.status == 'ok') {
+					app.news[source][page] = response.articles;
+					renderArticles(app.news[source][page]);
+				}
+			})
+			.catch(function(error) {
+				console.error('There has been a problem with your fetch operation: ' + error.message);
+			});
+	} else {
+		renderArticles(app.news[source][page]);
+	}
+}
+
+function renderArticles(articles) {
+	articles.forEach((article) => {
+		let articleContent = createArticleMarkup(article);
+		constants.articlesWrapper.innerHTML += articleContent;	
+	});
 }
 
 function createArticleMarkup(article = {}) {
